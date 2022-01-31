@@ -1,46 +1,18 @@
 {
   "items": [
     {
-      "name": "tgjtyj",
+      "name": "hola",
       "price": 0,
-      "type": "xtjnhy",
-      "brand": "dfxj",
+      "type": "",
+      "brand": "",
       "id": 1
     },
     {
-      "name": "aaa",
+      "name": "Adeuuu",
       "price": 0,
       "type": "",
       "brand": "",
       "id": 2
-    },
-    {
-      "name": "bbb",
-      "price": 0,
-      "type": "",
-      "brand": "",
-      "id": 3
-    },
-    {
-      "name": "aaaaa",
-      "price": 0,
-      "type": "",
-      "brand": "",
-      "id": 4
-    },
-    {
-      "name": "wtewgsabhrtyhsdgbrtyhugefwrshdujdtryh",
-      "price": 0,
-      "type": "",
-      "brand": "",
-      "id": 5
-    },
-    {
-      "name": "fwesg",
-      "price": 0,
-      "type": "",
-      "brand": "",
-      "id": 6
     }
   ]
 }

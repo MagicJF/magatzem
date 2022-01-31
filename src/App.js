@@ -3,53 +3,32 @@ import SearchBar from './SearchBar';
 import AddItem from './AddItem';
 import { useState, useEffect } from 'react';
 import ItemsDisplay from './ItemsDisplay';
-import axios from 'axios';
+import ItemsDisplayv2 from './ItemsDisplayv2';
 
 function App() {
   const [filters, setFilters] = useState({});
   const [data, setData] = useState({ items: [] });
 
   const [Hola, setName] = useState(null);
-  const [Hola2, setName2] = useState(null);
-  const [Hola3, setName3] = useState(null);
-  const [Hola4, setName4] = useState(null);
 
   useEffect(() => {
+    fetch('http://localhost:3000/items')
+      .then((response) => response.json())
+      .then((data) => setData({ items: data }));
     fetch('http://localhost:3000/items')
       .then((response) => response.json())
       .then((data) => setData({ items: data }));
   }, []);
 
   useEffect(() => {
-    fetch('https://pokeapi.co/api/v2/pokemon/ditto')
+    fetch(
+      'https://qszlpvwqyc.execute-api.us-east-1.amazonaws.com/dev/get-player-score/334'
+    )
       .then((res) => res.json())
       .then((res) => {
-        // console.log(res);
-        setName(res.name);
-      });
-  }, []);
-
-  useEffect(() => {
-    axios.get('https://pokeapi.co/api/v2/pokemon/ditto').then((res) => {
-      console.log(res);
-      console.log(res.data.moves[0].move.url);
-      setName2(res.data.moves[0].move.url);
-    });
-  }, []);
-
-  useEffect(() => {
-    fetch('/datos/persona.json')
-      .then((res) => res.json())
-      .then((res) => {
-        setName3(res.text);
         console.log(res);
+        setName(res.user.name);
       });
-  }, []);
-
-  useEffect(() => {
-    axios.get('https://api.agify.io/?name=michael').then((res) => {
-      setName4(res.data.name);
-    });
   }, []);
 
   const updateFilters = (searchParams) => {
@@ -87,6 +66,17 @@ function App() {
       .then((data) => {
         items.push(data);
         setData({ items: items });
+        console.log(data);
+      });
+    fetch(
+      'https://qszlpvwqyc.execute-api.us-east-1.amazonaws.com/dev/create-player-score/334',
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        items.push(data);
+        setData({ items: items });
+        console.log(data);
       });
   };
 
@@ -126,15 +116,15 @@ function App() {
         ></ItemsDisplay>
       </div>
       <div className='row mt-3'>
+        <ItemsDisplayv2 items={data['items']}></ItemsDisplayv2>
+      </div>
+      <div className='row mt-3'>
         <SearchBar updateSearchParams={updateFilters}></SearchBar>
       </div>
       <div className='row mt-3'>
         <AddItem addItem={addItemToData}></AddItem>
       </div>
       <div>{Hola}</div>
-      <div>{Hola2}</div>
-      <div>{Hola3}</div>
-      <div>{Hola4}</div>
     </div>
   );
 }
