@@ -15,15 +15,11 @@ function App() {
     fetch('http://localhost:3000/items')
       .then((response) => response.json())
       .then((data) => setData({ items: data }));
-    fetch('http://localhost:3000/items')
-      .then((response) => response.json())
-      .then((data) => setData({ items: data }));
   }, []);
-
+  const id = 334;
+  const dynamoLink = `https://qszlpvwqyc.execute-api.us-east-1.amazonaws.com/dev/get-player-score/${id}`;
   useEffect(() => {
-    fetch(
-      'https://qszlpvwqyc.execute-api.us-east-1.amazonaws.com/dev/get-player-score/334'
-    )
+    fetch(dynamoLink)
       .then((res) => res.json())
       .then((res) => {
         console.log(res);
