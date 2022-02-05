@@ -3,28 +3,18 @@ import SearchBar from './SearchBar';
 import AddItem from './AddItem';
 import { useState, useEffect } from 'react';
 import ItemsDisplay from './ItemsDisplay';
-import ItemsDisplayv2 from './ItemsDisplayv2';
+import ItemsDisplayDynamo from './ItemsDisplayDynamo';
+import SearchBarDynamo from './SearchBarDynamo';
+import AddItemDynamo from './AddItemDynamo';
 
 function App() {
   const [filters, setFilters] = useState({});
   const [data, setData] = useState({ items: [] });
 
-  const [Hola, setName] = useState(null);
-
   useEffect(() => {
     fetch('http://localhost:3000/items')
       .then((response) => response.json())
       .then((data) => setData({ items: data }));
-  }, []);
-  const id = 334;
-  const dynamoLink = `https://qszlpvwqyc.execute-api.us-east-1.amazonaws.com/dev/get-player-score/${id}`;
-  useEffect(() => {
-    fetch(dynamoLink)
-      .then((res) => res.json())
-      .then((res) => {
-        console.log(res);
-        setName(res.user.name);
-      });
   }, []);
 
   const updateFilters = (searchParams) => {
@@ -36,6 +26,15 @@ function App() {
     const requestOptions = {
       method: 'DELETE',
     };
+    fetch(`http://localhost:3000/items/${item.id}`, requestOptions).then(
+      (response) => {
+        if (response.ok) {
+          const idx = items.indexOf(item);
+          items.splice(idx, 1);
+          setData({ items: items });
+        }
+      }
+    );
     fetch(`http://localhost:3000/items/${item.id}`, requestOptions).then(
       (response) => {
         if (response.ok) {
@@ -64,10 +63,12 @@ function App() {
         setData({ items: items });
         console.log(data);
       });
-    fetch(
-      'https://qszlpvwqyc.execute-api.us-east-1.amazonaws.com/dev/create-player-score/334',
-      requestOptions
-    )
+
+    // esto es POST aws
+    const POSTdynamoItemID = 123895;
+    const POSTdynamoLink = `https://qszlpvwqyc.execute-api.us-east-1.amazonaws.com/dev/create-player-score/${POSTdynamoItemID}`;
+
+    fetch(POSTdynamoLink, requestOptions)
       .then((response) => response.json())
       .then((data) => {
         items.push(data);
@@ -111,16 +112,24 @@ function App() {
           items={filterData(data['items'])}
         ></ItemsDisplay>
       </div>
-      <div className='row mt-3'>
-        <ItemsDisplayv2 items={data['items']}></ItemsDisplayv2>
-      </div>
+
       <div className='row mt-3'>
         <SearchBar updateSearchParams={updateFilters}></SearchBar>
       </div>
       <div className='row mt-3'>
         <AddItem addItem={addItemToData}></AddItem>
       </div>
-      <div>{Hola}</div>
+
+      <div className='row mt-3'>
+        <ItemsDisplayDynamo items={data['items']}></ItemsDisplayDynamo>
+      </div>
+      <div className='row mt-3'>
+        <SearchBarDynamo updateSearchParams={updateFilters}></SearchBarDynamo>
+      </div>
+
+      <div className='row mt-3'>
+        <AddItemDynamo addItem={addItemToData}></AddItemDynamo>
+      </div>
     </div>
   );
 }

@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 
-function AddItem(props) {
+function AddItemDynamo(props) {
   const [name, setName] = useState('');
   const [price, setPrice] = useState(0);
   const [type, setType] = useState('');
   const [brand, setBrand] = useState('');
 
-  const addItemButtonPressed = () => {
+  const addItemButtonPressedDynamo = () => {
     props.addItem({
       name: name,
       price: price,
@@ -19,13 +19,38 @@ function AddItem(props) {
     setBrand('');
   };
 
+  // esto es POST aws
+  const [data, setData] = useState({ items: [] });
+  const addItemToData = (item) => {
+    let items = data['items'];
+
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(item),
+    };
+
+    const POSTdynamoItemID = 123890;
+    const POSTdynamoLink = `https://qszlpvwqyc.execute-api.us-east-1.amazonaws.com/dev/create-player-score/${POSTdynamoItemID}`;
+
+    fetch(POSTdynamoLink, requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        items.push(data);
+        setData({ items: items });
+        console.log(data);
+      });
+  };
+
   return (
     <div className='container'>
       <div className='row'>
-        <h2>Add a item</h2>
+        <h2>Add a item Dynamo</h2>
       </div>
       <div className='row'>
-        <label htmlFor='name-field'>Name:</label>
+        <label htmlFor='name-field'>ItemID:</label>
         <input
           id='name-field'
           type='text'
@@ -61,14 +86,14 @@ function AddItem(props) {
       <div className='row mt-3'>
         <button
           type='button'
-          className='btn btn-primary'
-          onClick={addItemButtonPressed}
+          className='btn btn-secondary'
+          onClick={addItemButtonPressedDynamo}
         >
-          Add Item
+          Add Item Dynamo
         </button>
       </div>
     </div>
   );
 }
 
-export default AddItem;
+export default AddItemDynamo;
